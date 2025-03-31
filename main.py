@@ -1,6 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 import pretty_midi
 from io import BytesIO
+from fastapi.middleware.wsgi import WSGIMiddleware
 
 app = FastAPI()
 
@@ -13,3 +14,6 @@ async def analyze_midi(midi_file: UploadFile = File(...)):
         return {"tempo": tempos[0] if tempos else 120}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+# Expose the WSGI application
+application = WSGIMiddleware(app)
